@@ -1,15 +1,19 @@
 import { StatusBar } from "expo-status-bar";
-import LoginScreen from "./components/Login";
 import { StyleSheet, Text, View } from "react-native";
-import Preview from "./components/Preview";
+
 
 export default function App() {
   return (
+<<<<<<< HEAD
     <View>
-      <LoginScreen />
-      {/* <Preview/> */}
+     
       <StatusBar style="auto" />
     </View>
+=======
+    
+    
+    
+>>>>>>> f3cdd0bfff217cbbee270b1342024ba6bc570687
   );
 }
 
