@@ -6,7 +6,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ScrollView, // Add ScrollView to make content scrollable if necessary
+  ScrollView,
 } from "react-native";
 
 import fav from "../assets/favicon.png";
@@ -15,11 +15,11 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   const handleLogin = () => {
-  //     // Add your login logic here using 'username' and 'password' state
-  //     // If login is successful, you can navigate to the homepage
-  //     navigation.navigate("welcomeScreen");
-  //   };
+  // const handleLogin = () => {
+  //   // Add your login logic here using 'username' and 'password' state
+  //   // If login is successful, you can navigate to the homepage
+  //   navigation.navigate("home");
+  // };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -45,6 +45,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
+          {/* Add onPress prop to call handleLogin function */}
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>

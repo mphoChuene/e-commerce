@@ -107,10 +107,10 @@ const styles = StyleSheet.create({
  marginLeft:10
   },
   addToCartBtn:{
- backgroundColor:'dodgerblue',
- width:220,
+ backgroundColor:'#FFB124',
+ width:380,
  height: 38,
- borderRadius:15,
+ borderRadius:10,
  alignItems:"center",
  justifyContent:'center',
  marginVertical:20

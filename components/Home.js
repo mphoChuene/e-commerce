@@ -51,7 +51,7 @@ const HomePage = () => {
                 <ScrollView style={{ flex: 1 }}>
                     <View style={styles.container}>
                         <View style={{ flex: 1 }}>
-                            {/* <Image source={top_image} style={styles.topImage} />*/}
+                            {/* <Image source={top_image} style={styles.topImage} /> */}
 
                             <View style={{ borderRadius: 15, overflow: 'hidden' }}>
                                 <PagerView style={styles.viewPager} initialPage={0}>

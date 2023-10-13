@@ -189,14 +189,14 @@ const Cart = () => {
             style={{
               alignSelf: "center",
               fontWeight: "bold",
-              backgroundColor: "whitesmoke",
+              backgroundColor: "#FFB124",
               borderRadius: 25,
               padding: 5,
               borderColor: "gray",
               borderWidth: 0.5,
             }}
           >
-            <Text style={{ color: "blue", fontWeight: "bold" }}>Change</Text>
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>Change</Text>
           </TouchableOpacity>
         </View>
 
@@ -237,20 +237,20 @@ const Cart = () => {
             style={{
               alignSelf: "center",
               fontWeight: "bold",
-              backgroundColor: "whitesmoke",
+              backgroundColor: "#FFB124",
               borderRadius: 25,
               padding: 5,
               borderColor: "gray",
               borderWidth: 0.5,
             }}
           >
-            <Text style={{ color: "blue", fontWeight: "bold" }}>Change</Text>
+            <Text style={{ color: "#fff", fontWeight: "bold" }}>Change</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity
           style={{
-            backgroundColor: "blue",
+            backgroundColor: "#FFB124",
             alignItems: "center",
             padding: 10,
             borderRadius: 15,
@@ -273,4 +273,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
-
