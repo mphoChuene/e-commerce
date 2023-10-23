@@ -1,24 +1,21 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-// import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {initializeApp} from 'firebase/app';
+import {getFirestore
+} from 'firebase/firestore';
+import {getStorage} from "firebase/storage";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBph5vh01VSSxPLmcKW_xHfIMORuVaB3EU",
-  authDomain: "rnauthentication-b9e98.firebaseapp.com",
-  projectId: "rnauthentication-b9e98",
-  storageBucket: "rnauthentication-b9e98.appspot.com",
-  messagingSenderId: "165100286813",
-  appId: "1:165100286813:web:f996580d81f80876e72eb4",
-  measurementId: "G-X6V14K3NCH",
-};
-
-// Initialize Firebase
-export const FIREBASE_APP = initializeApp(firebaseConfig);
-export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
-// const analytics = getAnalytics(app);
+    apiKey: process.env.EXPO_PUBLIC_API_KEY,
+    authDomain: process.env.EXPO_PUBLIC_DOMAIN,
+    projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+    storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
+    messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
+    appId: process.env.EXPO_PUBLIC_API_ID
+  };
+  const app= initializeApp(firebaseConfig);
+  initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  });
+  export const db=getFirestore(app);
+  export const storage=getStorage(app);

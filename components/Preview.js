@@ -1,123 +1,147 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from "react-native";
+import { Octicons } from "@expo/vector-icons";
+import { ToggleButton,Button,Snackbar } from "react-native-paper";
+import s from "../assets/s.png";
+import m from "../assets/m.png";
+import l from "../assets/l.png";
+import xl from "../assets/xl.png";
+import { Ionicons } from '@expo/vector-icons';
+import { ProfileContext } from "../Manager/ProfileManager";
+import { AddtoCart } from "../Cart/AddtoCart";
 
 const Preview = () => {
+  const {
+    visible, setVisible,
+    ItemOnModal,setItemOnModal,
+    key, SetKey
+} = useContext(ProfileContext);
+
+const [itemcolor, setcolor] = useState("pnik");
+  const [status, setStatus] = useState("checked");
+  const [value, setValue] = useState("S");
+  const [isLoading, setisLoading] = useState(false);
+  const [isvisible, set_Visible] = useState(false);
+  const onDismissSnackBar = () => set_Visible(false);
+
+  const onButtonToggle = (value) => {
+    setStatus(status === "checked" ? "unchecked" : "checked");
+  };
+  const HandleaAddtoCart=()=>{
+    try {
+      AddtoCart(data);
+      set_Visible(true);
+    } catch (error) {
+      console.log(String(error));
+    }
+  }
+  
+
+  var data={
+    ...ItemOnModal,
+    size:value,
+    color:itemcolor,
+    ukey:key
+  }
   return (
-    <View style={styles.container}>
-      <View style={styles.imgContainer}></View>
-      <View style={styles.ProdDetails}>
-        <View style={styles.prodtitle}>
-          <View style={styles.prodName}>
-            <Text style={{ fontSize: 40, fontWeight: "bold" }}>Skirt</Text>
-            <Text style={{ color: "grey" }}>black comfortable skirt</Text>
-          </View>
-          <View style={styles.price}>
-            <Text
-              style={{ fontSize: 22, color: "dodgerblue", fontWeight: "bold", marginTop:8 }}
-            >
-              R70.85
-            </Text>
-          </View>
-        </View>
-        <View>
-          <View>
-            <Text style={{fontSize:25, fontWeight:'bold',marginVertical:10}}>COLOR</Text>
-          </View>
-          <View style={styles.circleContainer}>
-            <View style={styles.circle}></View>
-            <View style={styles.circle}></View>
-            <View style={styles.circle}></View>
-          </View>
-        </View>
-        <View>
-            <Text style={{fontSize:20, fontWeight:'bold',marginVertical:20,marginLeft:10}}>SIZE</Text>
-            <View style={styles.sizeContainer}>
-                <TouchableOpacity style={styles.sizeSelectors}>
-                    <Text style={{fontSize:25}}>S</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.sizeSelectors}>
-                    <Text style={{fontSize:25,color:'#fff'}}>M</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.sizeSelectors}>
-                    <Text style={{fontSize:25}}>L</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.sizeSelectors}>
-                    <Text style={{fontSize:25}}>XL</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <Image
+          source={{ uri: ItemOnModal.img }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            backgroundColor: "whitesmoke",
+            position:"relative"
+          }}
+        />
+      <Ionicons
+      onPress={()=>setVisible(false)}
+       name="ios-close-circle-outline" size={34} color="black" style={{position:"absolute",top:0,zIndex:5,margin:20,backgroundColor:'white',borderRadius:25}} />
+
       </View>
-    <View style={styles.bottomSection}>
-    <TouchableOpacity style={styles.addToCartBtn}>
-            <Text style={{fontSize:20,color:'#fff'}}>Add to bag</Text>
+      <View style={{ flex: 1, margin: 10 }}>
+        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+          <Text style={{ fontSize: 28, fontWeight: "bold" }}>{ItemOnModal.brand}</Text>
+          <Text style={{ fontSize: 18 }}>R{ItemOnModal.itemcost}</Text>
+        </View>
+        <Text>{ItemOnModal.itemtype}</Text>
+
+        <Text style={{ fontSize: 25, marginTop: 10, fontWeight: "600" }}>
+          Colors
+        </Text>
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <TouchableOpacity onPress={()=>setcolor('pink')}>
+          <Octicons name="dot-fill" size={55} color="#ffa797" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>setcolor('blue')}>
+          <Octicons name="dot-fill" size={55} color="#14bfed" />
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={()=>setcolor('black')}>
+          <Octicons name="dot-fill" size={55} color="#060606" />
+          </TouchableOpacity>
+          <Text style={{alignSelf:"center"}}>{itemcolor}</Text>
+        </View>
+        <Text style={{ fontSize: 25, marginTop: 10, fontWeight: "600" }}>
+          Size
+        </Text>
+        <ToggleButton.Group
+          onValueChange={(value) => setValue(value)}
+          value={value}
+        >
+          <View style={{flexDirection:"row"}}>
+          <ToggleButton icon={s} value="S" style={{borderRadius:25}} >
+            </ToggleButton>
+          <ToggleButton icon={m} value="M" style={{borderRadius:25}}/>
+          <ToggleButton icon={l} value="L" style={{borderRadius:25}}/>
+          <ToggleButton icon={xl} value="XL" style={{borderRadius:25}}/>
+          </View>
+        </ToggleButton.Group>
+
+        <TouchableOpacity onPress={()=>HandleaAddtoCart()}>
+          <Button disabled={isLoading ? true : false} style={styles.customButton}
+            loading={isLoading}
+            mode="contained" >
+            Add to bag
+          </Button>
         </TouchableOpacity>
-    </View>
+        <Snackbar
+        duration={1000}
+        visible={isvisible}
+        onDismiss={onDismissSnackBar}
+        >
+        Added to Cart.
+      </Snackbar>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "whitesmoke",
     justifyContent: "center",
     alignItems: "center",
   },
-  imgContainer: {
-    backgroundColor: "grey",
-    height: 500,
-    width: "100%",
-    borderBottomRightRadius:20,
-    borderBottomLeftRadius:20
-  },
-  ProdDetails: {},
-  prodtitle: {
-    flexDirection: "row",
-    width: "100%",
-  },
-  prodName: {
-    // justifyContent:"space-around"
-  },
-  price: {
-    // justifyContent:"flex-end",
-    marginLeft: 180,
-  },
-  circleContainer:{
-    flexDirection:'row',
-
-  },
-  circle: {
-    backgroundColor: "pink",
-    height: 30,
-    width: 30,
-    borderRadius: 50,
-    marginHorizontal:3,
-  }, 
-  sizeSelectors:{
-    marginHorizontal:5,
-    marginVertical:8,
-    width:45,
-    height:45,
+  customButton: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: "#FFB124",
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent:'center',
-    borderRadius:50,
-    backgroundColor:'grey'
-  },
-  sizeContainer:{
- flexDirection:'row',
- marginLeft:10
-  },
-  addToCartBtn:{
- backgroundColor:'#FFB124',
- width:380,
- height: 38,
- borderRadius:10,
- alignItems:"center",
- justifyContent:'center',
- marginVertical:20
-  },
-  bottomSection:{
-
-  },
+    borderRadius: 9,
+  }
 });
 
 export default Preview;

@@ -1,29 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function ConfirmDetails() {
   return (
     <View style={styles.container}>
-      <View>
-        <Ionicons name="arrow-back-outline" size={30} />
-        <Text
-          style={{
-            marginLeft: 10,
-            alignSelf: "center",
-            fontWeight: "500",
-            fontSize: 20,
-            marginBottom: 10,
-          }}
-        >
-          Confirm Details
-        </Text>
-      </View>
 
       <View
         style={{
           borderWidth: 2,
-          borderColor: "blue",
+          borderColor: "#FFB124",
           backgroundColor: "rgba(128, 128, 128, 0.5)",
           borderRadius: 30,
           justifyContent: "space-between",
@@ -32,6 +17,7 @@ export default function ConfirmDetails() {
           flexDirection: "column",
           marginLeft: 10,
           marginBottom: 10,
+          marginTop:10
         }}
       >
         <View
@@ -67,7 +53,7 @@ export default function ConfirmDetails() {
       <View
         style={{
           borderWidth: 2,
-          borderColor: "blue",
+          borderColor: "#FFB124",
           backgroundColor: "rgba(128, 128, 128, 0.5)",
           borderRadius: 30,
           justifyContent: "space-between",
@@ -118,7 +104,7 @@ export default function ConfirmDetails() {
           width: "95%",
           borderWidth: 1,
           borderStyle: "dashed",
-          borderColor: "blue",
+          borderColor: "#FFB124",
         }}
       >
         <Text style={{ alignSelf: "center", fontWeight: "900", fontSize: 15 }}>
@@ -169,6 +155,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "stretch",
     justifyContent: "flex-start",
-    marginTop: 20,
   },
 });

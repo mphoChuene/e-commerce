@@ -3,78 +3,106 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
+  Alert,
+  ScrollView,
 } from "react-native";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../FirebaseConfig";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { Button } from 'react-native-paper';
 
-function RegistrationPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    phoneNumber: "",
-    role: "Seller",
-  });
+function RegistrationPage({ navigation }) {
+  const [isLoading, setisLoading] = useState(false);
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
+  const [Name, setName] = useState('');
+  const handleSubmit = async () => {
+    if (Password !== '' && Username !== '' && Name!=='') {
 
-  const [isUsernameAvailable, setIsUsernameAvailable] = useState(false); // Add this state
-
-  const handleChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-    setIsUsernameAvailable(false); // Reset username availability when input changes
-  };
-
-  const handleSubmit = () => {
-    // Check username availability when the "Next" button is pressed
-    const username = formData.name; // Assuming the "name" field is used as the username
-    const usernameAvailable = checkUsernameAvailability(username);
-    setIsUsernameAvailable(usernameAvailable);
-
-    // Now you can handle the username availability as needed
-    if (usernameAvailable) {
-      console.log("Username is available");
-      // Continue with the registration process
-    } else {
-      console.log("Username is not available");
-      // Display an error message or take appropriate action
+      try {
+        const auth = getAuth();
+        let data = {
+          Username: Username,
+          memberDate:(new Date().toLocaleDateString()).toString(),
+          address:[],
+          Name:Name.trim()
+        }
+        setisLoading(true);
+        const result = await createUserWithEmailAndPassword(auth, Username.trim().toLocaleLowerCase(), Password);
+        setDoc(doc(db, "E_Users", result.user.uid.trim()), data).then(() => {
+          setisLoading(false);
+          Alert.alert('Notification', 'Successfull registration',
+          [
+            {text: 'OK', onPress: () =>navigation.navigate("LoginScreen")},
+          ]);
+        }).catch((err) => {
+          console.log(error);
+          setisLoading(false);
+          Alert.alert('Notification', err.message);
+        })
+      } catch (error) {
+        console.log(error);
+        setisLoading(false);
+        Alert.alert('Notification', error.message);
+      }
+    }else{
+      Alert.alert('Notification', 'Please fill the required fields.');
     }
   };
 
-  // Function to check username availability
-  const checkUsernameAvailability = (username) => {
-    // Implement your username availability logic here (e.g., query a server or check against existing usernames)
-    return username.trim() !== ""; // For demonstration purposes, it checks if the username is not empty
-  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Username</Text>
+    <ScrollView style={styles.container}>
+      <View style={styles.container}>
+      <Text style={styles.title}>Create your account</Text>
       <Text style={styles.title2}>
-        Choose a username or take our friendly suggestions. You can update it
+        Enter your personal details bellow. You can update your password
         whenever you like!
       </Text>
 
-      <Text style={styles.title3}>Username</Text>
+      <Text style={styles.title3}>Your Name</Text>
       <TextInput
         style={styles.input1}
         placeholder="Name"
-        value={formData.name}
-        onChangeText={(text) => handleChange("name", text)}
+        value={Name}
+        onChangeText={(text) => setName(text)}
       />
 
-      {isUsernameAvailable && (
-        <Text style={styles.availableText}>Username available!</Text>
-      )}
+      <Text style={styles.title3}>Username(Email)</Text>
+      <TextInput
+        style={styles.input1}
+        placeholder="Email"
+        value={Username}
+        onChangeText={(text) => setUsername(text.trim())}
+      />
+      <Text style={styles.title3}>passsword</Text>
+      <TextInput
+        style={styles.input1}
+        placeholder="Password"
+        value={Password}
+        secureTextEntry={true}
+        onChangeText={(text) => setPassword(text)}
+      />
 
-      <TouchableOpacity style={styles.customButton} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Next</Text>
+
+      <TouchableOpacity onPress={() => handleSubmit()}>
+        <Button disabled={isLoading ? true : false} style={styles.customButton}
+          loading={isLoading}
+          mode="contained" >
+          Register
+        </Button>
       </TouchableOpacity>
 
       <View style={styles.footer}>
-        <Text>Already have account?</Text>
-        <Button title="Login" />
+        <Text style={{fontSize:17}}>Already have account?</Text>
+        <TouchableOpacity onPress={()=>navigation.navigate("LoginScreen")}>
+        <Text style={{color:'#FFB124',marginLeft:5,fontWeight:"bold",fontSize:17}}>Login</Text>
+        </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 }
 
@@ -89,7 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     marginTop: 100,
-    alignSelf: "left",
     color: "black",
   },
   input1: {
@@ -121,7 +148,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: "40%",
+    marginTop: "20%",
   },
 
   buttonContainer: {
@@ -131,7 +158,6 @@ const styles = StyleSheet.create({
   customButton: {
     marginTop: "15%",
     width: "100%",
-    height: "7%",
     backgroundColor: "#FFB124",
     justifyContent: "center",
     alignItems: "center",

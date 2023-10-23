@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Text,
   View,
@@ -7,51 +7,84 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
-
-import fav from "../assets/favicon.png";
+import { Button } from 'react-native-paper';
+import fav from "../assets/online.png";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { ProfileContext } from "../Manager/ProfileManager";
 
 const LoginScreen = ({ navigation }) => {
+
+  const {
+    key, SetKey
+} = useContext(ProfileContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setisLoading] = useState(false);
 
-  // const handleLogin = () => {
-  //   // Add your login logic here using 'username' and 'password' state
-  //   // If login is successful, you can navigate to the homepage
-  //   navigation.navigate("home");
-  // };
+  const handleLogin = () => {
+    if (username !== '' && password !== '') {
+      setisLoading(true);
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, username.trim().toLowerCase(), password).then((res) => {
+        SetKey(res.user.uid);
+        setPassword('');
+        setUsername('');
+        setisLoading(false);
+        navigation.navigate("HomePage");
+
+      }).catch((err) => {
+        setPassword('');
+        setisLoading(false);
+        Alert.alert('Notification', err.message);
+
+      });
+    }else{
+      Alert.alert('Notification', 'Please fill the required fields.');
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.imgContainer}>
-        <Image source={fav} style={styles.icon} />
-        <Text style={{ fontSize: 28, fontWeight: "bold" }}>Instagram</Text>
-      </View>
-      <TextInput
-        placeholder="Username"
-        style={styles.textInput}
-        value={username}
-        onChangeText={(text) => setUsername(text)}
-      />
-      <TextInput
-        placeholder="Password"
-        style={styles.textInput}
-        secureTextEntry
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
+
       <View>
-        <Text style={styles.forgT}>forgot password?</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
-          {/* Add onPress prop to call handleLogin function */}
-          <Text style={styles.buttonText}>Login</Text>
+        <View style={styles.imgContainer}>
+          <Image source={fav} style={styles.icon} />
+          <Text style={{ fontSize: 28, fontWeight: "bold" }}>Amazing Store</Text>
+        </View>
+        <TextInput
+          placeholder="Username"
+          style={styles.textInput}
+          value={username}
+          onChangeText={(text) => setUsername(text.trim())}
+        />
+        <TextInput
+          placeholder="Password"
+          style={styles.textInput}
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate('Forgotpassword')}>
+            <Text style={styles.forgT}>forgot password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => handleLogin()}>
+          <Button disabled={isLoading ? true : false} style={styles.customButton}
+            loading={isLoading}
+            mode="contained" >
+            Login
+          </Button>
         </TouchableOpacity>
       </View>
+
       <View style={styles.signT}>
         <Text>Don't have an account? </Text>
-        <Text style={{ color: "#FFB124", paddingLeft: 5 }}>Sign up</Text>
+        <Text onPress={() => navigation.navigate('RegistrationPage')} style={{ color: "#FFB124", paddingLeft: 5 }}>Sign up</Text>
       </View>
     </ScrollView>
   );
@@ -59,9 +92,9 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1, // Use flexGrow to ensure the content fits within the screen
+    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "stretch",
   },
   textInput: {
     width: 350,
@@ -71,6 +104,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     padding: 8,
+    alignSelf: "center"
   },
   forgT: {
     marginLeft: 240,
@@ -82,22 +116,23 @@ const styles = StyleSheet.create({
     marginTop: 130,
   },
   imgContainer: {
-    // backgroundColor:'red',
     width: "100%",
     alignItems: "center",
     marginBottom: 120,
   },
   buttonContainer: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginTop: 200, // Adjusted the marginTop for the button
+    backgroundColor: 'red',
+    alignItems: "stretch",
+    justifyContent: "center",
   },
-  button: {
+  customButton: {
+    marginTop: "15%",
+    marginLeft: 10,
+    marginRight: 10,
     backgroundColor: "#FFB124",
-    padding: 10,
-    borderRadius: 10,
-    width: 400,
+    justifyContent: "center",
     alignItems: "center",
+    borderRadius: 9,
   },
   buttonText: {
     color: "white",
@@ -105,6 +140,7 @@ const styles = StyleSheet.create({
   },
   signT: {
     marginTop: 12,
+    marginLeft: 10,
     flexDirection: "row",
   },
 });
